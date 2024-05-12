@@ -1,0 +1,22 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="EN">
+<!--/*@thymesVar id="colors" type="de.justusneeb.labyrinth.entity.PlayerColor[]"*/-->
+<!--/*@thymesVar id="players" type="de.justusneeb.labyrinth.entity.Player[]"*/-->
+<!--/*@thymesVar id="player" type="de.justusneeb.labyrinth.entity.Player"*/-->
+    <head>
+        <title>Labyrinth</title>
+    </head>
+    <body>
+        <h1>Player waiting</h1>
+        <table>
+            <tbody>
+                <tr th:each="color : ${colors}">
+                    <td th:text="${color}"></td>
+                    <td>
+                        <span th:each="player : ${players}" th:if="${color.name() == player.color}" th:text="${player.username}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{player-waiting(playerId=${player.playerId})}">Refresh</a>
+    </body>
+</html>

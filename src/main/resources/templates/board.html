@@ -1,0 +1,40 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="EN">
+<!--/*@thymesVar id="board" type="de.justusneeb.labyrinth.entity.Board"*/-->
+<head>
+    <title>labyrinth</title>
+    <style>
+        .rotation0 {
+            transform: rotate(0deg);
+        }
+        .rotation90 {
+            transform: rotate(90deg);
+        }
+        .rotation180 {
+            transform: rotate(180deg);
+        }
+        .rotation270 {
+            transform: rotate(270deg);
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div th:each="row : ${board.tiles}">
+                        <span th:each="cell : ${row}">
+                            <img th:src="@{${cell.image}}" th:alt="${cell.tile}" th:class="rotation+${cell.rotation}">
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <img th:src="@{${board.freeTile.image}}" th:alt="${board.freeTile.tile}" th:class="rotation+${board.freeTile.rotation}"><br/>
+                    <a th:href="@{/rotate/90(playerId=${board.getActual().playerId})}">90 Grad rechts</a><br/>
+                    <a th:href="@{/rotate/270(playerId=${board.getActual().playerId})}">90 Grad links</a><br/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

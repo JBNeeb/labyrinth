@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="EN">
+<!--/*@thymesVar id="colors" type="de.justusneeb.labyrinth.entity.PlayerColor[]"*/-->
+<!--/*@thymesVar id="player" type="de.justusneeb.labyrinth.entity.Player"*/-->
+<!--/*@thymesVar id="players" type="de.justusneeb.labyrinth.entity.Player[]"*/-->
+<!--/*@thymesVar id="tool" type="de.justusneeb.labyrinth.boundary.http.ExpressionTool"*/-->
+    <head>
+        <title>Labyrinth</title>
+    </head>
+    <body>
+        <h1>Join an existing match match</h1>
+        <form action="#" th:action="@{/join-match}" th:object="${player}" method="POST">
+            <label for="username">Benutzername:</label> <input id="username" th:field="${player.username}" type="text" maxlength="80">
+            <input type="hidden" th:field="${player.gameId}">
+            <div th:each="color : ${colors}">
+                <input th:id="${color}" type="radio" th:value="${color}" th:field="${player.color}" th:text="${color}" th:disabled="${tool.colorExists(players, color)}"><br/>
+            </div>
+            <input type="submit" value="Join match">
+        </form>
+    </body>
+</html>

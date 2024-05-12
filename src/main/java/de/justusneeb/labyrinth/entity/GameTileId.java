@@ -1,15 +1,13 @@
 package de.justusneeb.labyrinth.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class Game {
-    @Id
+public class GameTileId implements Serializable {
     private String gameId;
-    private String status;
+    private String tile;
 }

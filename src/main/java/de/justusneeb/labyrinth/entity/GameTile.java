@@ -2,14 +2,20 @@ package de.justusneeb.labyrinth.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
-public class Game {
+@Entity
+@IdClass(GameTileId.class)
+public class GameTile {
     @Id
     private String gameId;
-    private String status;
+    @Id
+    private String tile;
+    private Integer x;
+    private Integer y;
+    private Integer rotation;
 }
