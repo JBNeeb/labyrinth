@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="EN">
+<!--/*@thymesVar id="colors" type="de.justusneeb.labyrinth.entity.PlayerColor[]"*/-->
+<!--/*@thymesVar id="player" type="de.justusneeb.labyrinth.entity.Player"*/-->
+    <head>
+        <title>Labyrinth</title>
+    </head>
+    <body>
+        <h1>Create a new match</h1>
+        <form action="#" th:action="@{/create-match}" th:object="${player}" method="POST">
+            <label for="username">Benutzername:</label> <input id="username" th:field="${player.username}" type="text" maxlength="80">
+            <div th:each="color : ${colors}">
+                <input th:id="${color}" type="radio" th:value="${color}" th:field="${player.color}" th:text="${color}"><br/>
+            </div>
+            <input type="submit" value="Create match">
+        </form>
+    </body>
+</html>

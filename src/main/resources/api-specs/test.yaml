@@ -1,0 +1,16 @@
+openapi: 3.0.2
+info:
+  title: franchise
+  version: 1.0.0
+  contact:
+    name: Justus Neeb
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          description: Test response
+          content:
+            'application/json':
+              schema:
+                type: string

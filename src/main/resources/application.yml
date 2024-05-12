@@ -1,0 +1,20 @@
+management:
+  server:
+    port: 4466
+server:
+  port: 8080
+spring:
+  main:
+    banner-mode: "off"
+  application:
+    name: 'labyrinth'
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: labyrinth
+    password: labyrinth123
+    auto-commit: false
+  thymeleaf:
+    cache: false
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
