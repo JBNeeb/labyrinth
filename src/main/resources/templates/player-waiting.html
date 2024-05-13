@@ -2,6 +2,7 @@
 <!--/*@thymesVar id="colors" type="de.justusneeb.labyrinth.entity.PlayerColor[]"*/-->
 <!--/*@thymesVar id="players" type="de.justusneeb.labyrinth.entity.Player[]"*/-->
 <!--/*@thymesVar id="player" type="de.justusneeb.labyrinth.entity.Player"*/-->
+<!--/*@thymesVar id="game" type="de.justusneeb.labyrinth.entity.Game"*/-->
     <head>
         <title>Labyrinth</title>
     </head>
@@ -18,5 +19,6 @@
             </tbody>
         </table>
         <a th:href="@{player-waiting(playerId=${player.playerId})}">Refresh</a>
+        <a th:href="@{board(playerId=${player.playerId})}" th:if="${game.status == 'PLAYING'}">Join</a>
     </body>
 </html>

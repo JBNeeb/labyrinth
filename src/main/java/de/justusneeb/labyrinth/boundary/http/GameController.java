@@ -92,14 +92,20 @@ public class GameController {
         model.addAttribute("player", player);
         model.addAttribute("players", gameService.retrievePlayers(player.getGameId()));
         model.addAttribute("colors", PlayerColor.values());
+        model.addAttribute("game", gameService.retrieveGame(player.getGameId()));
         return "player-waiting";
     }
 
     @GetMapping("/start")
     public String start(@RequestParam("playerId") String playerId, Model model) {
-        Player player = gameService.retrievePlayer(playerId);
-        Board board = gameService.startGame(player.getGameId());
-        board.setActual(player);
+        Board board = gameService.startGame(playerId);
+        model.addAttribute("board", board);
+        return "board";
+    }
+
+    @GetMapping("/board")
+    private String board(@RequestParam("playerId") String playerId, Model model) {
+        Board board = gameService.loadBoard(playerId);
         model.addAttribute("board", board);
         return "board";
     }
@@ -107,6 +113,13 @@ public class GameController {
     @GetMapping("/rotate/{rotation}")
     public String rotation(@PathVariable Integer rotation, @RequestParam("playerId") String playerId, Model model) {
         Board board = gameService.rotateFreePlate(playerId, rotation);
+        model.addAttribute("board", board);
+        return "board";
+    }
+
+    @GetMapping("/shift/{direction}/{line}")
+    public String move(@PathVariable String direction, @PathVariable Integer line, @RequestParam("playerId") String playerId, Model model) {
+        Board board = gameService.shift(playerId, direction, line);
         model.addAttribute("board", board);
         return "board";
     }

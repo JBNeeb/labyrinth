@@ -12,4 +12,6 @@ public class Game {
     @Id
     private String gameId;
     private String status;
+    private String activePlayer;
+    private String phase;
 }

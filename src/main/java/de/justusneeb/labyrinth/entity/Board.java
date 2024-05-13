@@ -13,4 +13,7 @@ public class Board {
     private PlacedTile freeTile;
     private Player actual;
     private List<Player> players;
+    private String status;
+    private String phase;
+    private boolean ownDraw;
 }

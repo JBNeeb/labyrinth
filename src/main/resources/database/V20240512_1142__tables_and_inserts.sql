@@ -131,6 +131,8 @@ CREATE TABLE player (
 	username VARCHAR(80) NOT NULL,
 	color VARCHAR(10) NOT NULL,
 	game_id VARCHAR(40) NOT NULL,
+	x INTEGER NOT NULL,
+	y INTEGER NOT NULL,
 	PRIMARY KEY (player_id),
 	FOREIGN KEY (color) REFERENCES color(color),
 	FOREIGN KEY (game_id) REFERENCES game(game_id)

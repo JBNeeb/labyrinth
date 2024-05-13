@@ -31,6 +31,19 @@ public class GameService {
         player.setPlayerId(UUID.randomUUID().toString());
         player.setUsername(username);
         player.setColor(color);
+        if ("BLACK".equals(player.getColor())) {
+            player.setX(6);
+            player.setY(0);
+        } else if ("RED".equals(player.getColor())) {
+            player.setX(0);
+            player.setY(0);
+        } else if ("GREEN".equals(player.getColor())) {
+            player.setX(6);
+            player.setY(6);
+        } else if ("WHITE".equals(player.getColor())) {
+            player.setX(0);
+            player.setY(6);
+        }
         player.setGameId(gameId);
         return playerRepository.save(player);
     }
@@ -47,16 +60,30 @@ public class GameService {
         return gameRepository.findById(gameId).orElseThrow(() -> new IllegalStateException(gameId));
     }
 
-    public Board startGame(String gameId) {
+    public Board startGame(String playerId) {
+        Player player = retrievePlayer(playerId);
+        Game game = retrieveGame(player.getGameId());
+        if (!game.getStatus().equals(GameStatus.WAITING.name())) {
+            return loadBoard(playerId);
+        }
         Map<String, PlacedTile> map = retrievePlacedTiles();
         Board board = createStaticBoard(map);
         placeDynamicTiles(new ArrayList<>(map.values()), board);
-        board.setGameId(gameId);
+        board.setGameId(player.getGameId());
+        board.setActual(player);
+//        board.setActual(board.getPlayers().get(RANDOM.nextInt(board.getPlayers().size())));
+        board.setPlayers(retrievePlayers(player.getGameId()));
+        board.setOwnDraw(playerId.equals(board.getActual().getPlayerId()));
+        board.setStatus(GameStatus.PLAYING.name());
+        board.setPhase(GamePhase.SHIFT.name());
         saveBoard(board);
         return board;
     }
 
     private void saveBoard(Board board) {
+        if (board.isOwnDraw() && GamePhase.valueOf(board.getPhase()) == GamePhase.MOVE) {
+            markReachable(board.getActual().getX(), board.getActual().getY(), board.getTiles());
+        }
         List<GameTile> list = new ArrayList<>();
         for (int x = 0; x < board.getTiles().length; x++) {
             for (int y = 0; y < board.getTiles()[x].length; y++) {
@@ -78,6 +105,12 @@ public class GameService {
         gameTile.setRotation(board.getFreeTile().getRotation());
         list.add(gameTile);
         gameTileRepository.saveAll(list);
+        Game game = new Game();
+        game.setGameId(board.getGameId());
+        game.setStatus(board.getStatus());
+        game.setActivePlayer(board.getActual().getPlayerId());
+        game.setPhase(board.getPhase());
+        gameRepository.save(game);
     }
 
     private void placeDynamicTiles(List<PlacedTile> list, Board board) {
@@ -150,7 +183,7 @@ public class GameService {
         return board;
     }
 
-    private Board loadBoard(String playerId) {
+    public Board loadBoard(String playerId) {
         Player player = playerRepository.findById(playerId).orElseThrow(() -> new IllegalStateException(playerId));
         Game game = gameRepository.findById(player.getGameId()).orElseThrow(() -> new IllegalStateException(player.getGameId()));
         List<GameTile> gameTiles = gameTileRepository.findByGameId(game.getGameId());
@@ -158,6 +191,11 @@ public class GameService {
 
         Board board = new Board();
         board.setGameId(game.getGameId());
+        board.setPlayers(retrievePlayers(game.getGameId()));
+        board.setActual(board.getPlayers().stream().filter(f -> f.getPlayerId().equals(game.getActivePlayer())).findAny().orElseThrow());
+        board.setStatus(game.getStatus());
+        board.setPhase(game.getPhase());
+        board.setOwnDraw(playerId.equals(board.getActual().getPlayerId()));
         board.setTiles(new PlacedTile[7][7]);
         for (GameTile gt : gameTiles) {
             PlacedTile pt = map.get(gt.getTile());
@@ -168,7 +206,62 @@ public class GameService {
                 board.setFreeTile(pt);
             }
         }
-        board.setActual(player);
+        return board;
+    }
+
+    private void markReachable(int x, int y, PlacedTile[][] tiles) {
+        PlacedTile pt = tiles[y][x];
+        if (pt.isReachable()) {
+            return;
+        }
+        pt.setReachable(true);
+        if (pt.isNorth() && y > 0 && tiles[y - 1][x].isSouth()) {
+            markReachable(x, y - 1, tiles);
+        }
+        if (pt.isWest() && x > 0 && tiles[y][x - 1].isEast()) {
+            markReachable(x - 1, y, tiles);
+        }
+        if (pt.isSouth() && y < tiles.length - 1 && tiles[y + 1][x].isNorth()) {
+            markReachable(x, y + 1, tiles);
+        }
+        if (pt.isEast() && x < tiles.length - 1 && tiles[y][x + 1].isWest()) {
+            markReachable(x + 1, y, tiles);
+        }
+    }
+
+    public Board shift(String playerId, String direction, Integer line) {
+        Board board = loadBoard(playerId);
+        if ("down".equals(direction)) {
+            PlacedTile temp = board.getTiles()[board.getTiles().length - 1][line];
+            for (int i = board.getTiles().length - 1; i > 0; i--) {
+                board.getTiles()[i][line] = board.getTiles()[i - 1][line];
+            }
+            board.getTiles()[0][line] = board.getFreeTile();
+            board.setFreeTile(temp);
+        } else if ("up".equals(direction)) {
+            PlacedTile temp = board.getTiles()[0][line];
+            for (int i = 0; i < board.getTiles().length - 1; i++) {
+                board.getTiles()[i][line] = board.getTiles()[i + 1][line];
+            }
+            board.getTiles()[board.getTiles().length - 1][line] = board.getFreeTile();
+            board.setFreeTile(temp);
+        } else if ("right".equals(direction)) {
+            PlacedTile temp = board.getTiles()[line][board.getTiles().length - 1];
+            for (int i = board.getTiles().length - 1; i > 0; i--) {
+                board.getTiles()[line][i] = board.getTiles()[line][i - 1];
+            }
+            board.getTiles()[line][0] = board.getFreeTile();
+            board.setFreeTile(temp);
+        } else if ("left".equals(direction)) {
+            PlacedTile temp = board.getTiles()[line][0];
+            for (int i = 0; i < board.getTiles().length - 1; i++) {
+                board.getTiles()[line][i] = board.getTiles()[line][i + 1];
+            }
+            board.getTiles()[line][board.getTiles().length - 1] = board.getFreeTile();
+            board.setFreeTile(temp);
+        }
+        board.setPhase(GamePhase.MOVE.name());
+        saveBoard(board);
         return board;
     }
 }

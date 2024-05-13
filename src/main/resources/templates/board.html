@@ -15,6 +15,66 @@
         .rotation270 {
             transform: rotate(270deg);
         }
+        .container {
+            position: relative;
+            display: inline-block;
+            padding-left: 2px;
+            padding-right: 2px;
+            width: 80px;
+            height: 80px;
+        }
+        .red {
+            position: absolute;
+            font-size: x-large;
+            color: red;
+            top: 5px;
+            left: 5px;
+            background-color: black;
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            text-align: center;
+            line-height: 30px;
+        }
+        .white {
+            position: absolute;
+            font-size: x-large;
+            color: white;
+            bottom: 5px;
+            left: 5px;
+            background-color: black;
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            text-align: center;
+            line-height: 30px;
+        }
+        .black {
+            position: absolute;
+            font-size: x-large;
+            color: black;
+            top: 5px;
+            right: 5px;
+            background-color: white;
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            text-align: center;
+            line-height: 30px;
+        }
+        .green {
+            position: absolute;
+            font-size: x-large;
+            color: green;
+            bottom: 5px;
+            right: 5px;
+            background-color: white;
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            text-align: center;
+            line-height: 30px;
+        }
     </style>
 </head>
 <body>
@@ -22,13 +82,59 @@
         <tbody>
             <tr>
                 <td>
-                    <div th:each="row : ${board.tiles}">
-                        <span th:each="cell : ${row}">
-                            <img th:src="@{${cell.image}}" th:alt="${cell.tile}" th:class="rotation+${cell.rotation}">
+                    <div>
+                        <span>
+                            <img src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                        </span>
+                        <span th:each="col, pos : ${board.tiles}">
+                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT'}" th:href="@{'/shift/down/'+${pos.index}(playerId=${board.actual.playerId})}"
+                                ><img src="/images/tiles/transparent-80x80-final.png" alt="arrow down"></a>
+                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT'}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                        </span>
+                        <span>
+                            <img src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                        </span>
+                    </div>
+                    <div th:each="row, pos : ${board.tiles}">
+                        <span>
+                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT'}" th:href="@{'/shift/right/'+${pos.index}(playerId=${board.actual.playerId})}"
+                                ><img src="/images/tiles/transparent-80x80-final.png" alt="arrow right"></a>
+                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT'}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                        </span>
+                        <span th:each="cell, pos2 : ${row}" class="container">
+                            <a th:href="@{'/move/x/'+${pos2.index}+'/y/'+${pos.index}}" th:if="${cell.reachable}"
+                                ><img th:src="@{${cell.image}}" th:alt="${cell.tile}" th:class="rotation+${cell.rotation}" style="position: absolute"></a>
+                            <img th:src="@{${cell.image}}" th:if="${!cell.reachable}" th:alt="${cell.tile}" th:class="rotation+${cell.rotation}" style="position: absolute">
+                            <span th:each="player: ${board.players}" th:if="${pos.index == player.y && pos2.index == player.x}" th:text="${player.username.substring(0, 1)}" th:class="${player.color.toLowerCase()}"></span>
+                        </span>
+                        <span>
+                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT'}" th:href="@{'/shift/left/'+${pos.index}(playerId=${board.actual.playerId})}"
+                                ><img src="/images/tiles/transparent-80x80-final.png" alt="arrow left"></a>
+                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT'}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                        </span>
+                    </div>
+                    <div>
+                        <span>
+                            <img src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                        </span>
+                        <span th:each="col, pos : ${board.tiles}">
+                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT'}" th:href="@{'/shift/up/'+${pos.index}(playerId=${board.actual.playerId})}"
+                                ><img src="/images/tiles/transparent-80x80-final.png" alt="arrow up"></a>
+                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT'}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                        </span>
+                        <span>
+                            <img src="/images/tiles/transparent-80x80-final.png" alt="empty">
                         </span>
                     </div>
                 </td>
                 <td>
+                    <div th:each="player : ${board.players}">
+                        <span th:text="${player.username + ' ' + player.color}"></span>
+                    </div>
+                    <div>
+                        <span th:text="${board.getActual().username}">Active player is: </span>
+                        <span th:text="${board.phase}"></span>
+                    </div>
                     <img th:src="@{${board.freeTile.image}}" th:alt="${board.freeTile.tile}" th:class="rotation+${board.freeTile.rotation}"><br/>
                     <a th:href="@{/rotate/90(playerId=${board.getActual().playerId})}">90 Grad rechts</a><br/>
                     <a th:href="@{/rotate/270(playerId=${board.getActual().playerId})}">90 Grad links</a><br/>

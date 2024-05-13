@@ -13,5 +13,7 @@ public class Player {
     private String playerId;
     private String username;
     private String color;
+    private int x;
+    private int y;
     private String gameId;
 }
