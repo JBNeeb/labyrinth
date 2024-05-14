@@ -38,6 +38,38 @@ INSERT INTO symbol(symbol) VALUES ('SPIDER');
 INSERT INTO symbol(symbol) VALUES ('SKULL_MOTH');
 INSERT INTO symbol(symbol) VALUES ('MOUSE');
 
+CREATE TABLE card (
+    symbol VARCHAR(40) NOT NULL,
+    image VARCHAR(250) NOT NULL,
+    PRIMARY KEY (symbol),
+    FOREIGN KEY (symbol) REFERENCES symbol(symbol)
+);
+
+INSERT INTO card (symbol, image) VALUES ('HELMET', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('GHOST', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('HOBBIT', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('DIAMOND', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('CANDLE_HOLDER', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('OWL', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('CHEST', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('BAT', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('DRAGON', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('RING', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('SWORD', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('SKULL', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('SCARAB', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('GENIE', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('CROWN', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('KEYCHAIN', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('FAIRY', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('BAG_OF_GOLD', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('SALAMANDER', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('BOOK', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('MAP', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('SPIDER', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('SKULL_MOTH', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('MOUSE', '/images/tiles/red-80x80-final.png');
+
 CREATE TABLE tile (
     tile VARCHAR(40) NOT NULL,
     image VARCHAR(250) NOT NULL,
@@ -113,6 +145,8 @@ INSERT INTO game_status(status) VALUES ('ENDED');
 CREATE TABLE game (
     game_id VARCHAR(40) NOT NULL,
     status VARCHAR(20) NOT NULL,
+    active_player VARCHAR(40),
+    phase VARCHAR(20),
     PRIMARY KEY (game_id),
     FOREIGN KEY (status) REFERENCES game_status(status)
 );
@@ -123,7 +157,9 @@ CREATE TABLE game_tile(
     x INTEGER,
     y INTEGER,
     rotation INTEGER NOT NULL,
-    PRIMARY KEY (game_id, tile)
+    PRIMARY KEY (game_id, tile),
+    FOREIGN KEY (game_id) REFERENCES game(game_id),
+    FOREIGN KEY (tile) REFERENCES tile(tile)
 );
 
 CREATE TABLE player (
@@ -154,6 +190,6 @@ CREATE TABLE player_card (
     sequence INTEGER NOT NULL,
     PRIMARY KEY (player_id, symbol),
     FOREIGN KEY (player_id) REFERENCES player(player_id),
-    FOREIGN KEY (symbol) REFERENCES symbol(symbol),
+    FOREIGN KEY (symbol) REFERENCES card(symbol),
     FOREIGN KEY (status) REFERENCES card_status(status)
 );
