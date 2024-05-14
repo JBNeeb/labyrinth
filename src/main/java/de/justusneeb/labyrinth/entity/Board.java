@@ -15,5 +15,6 @@ public class Board {
     private List<Player> players;
     private String status;
     private String phase;
+    private String playerId;
     private boolean ownDraw;
 }

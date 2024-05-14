@@ -118,8 +118,15 @@ public class GameController {
     }
 
     @GetMapping("/shift/{direction}/{line}")
-    public String move(@PathVariable String direction, @PathVariable Integer line, @RequestParam("playerId") String playerId, Model model) {
+    public String shift(@PathVariable String direction, @PathVariable Integer line, @RequestParam("playerId") String playerId, Model model) {
         Board board = gameService.shift(playerId, direction, line);
+        model.addAttribute("board", board);
+        return "board";
+    }
+
+    @GetMapping("/move/x/{x}/y/{y}")
+    public String move(@PathVariable Integer x, @PathVariable Integer y, @RequestParam("playerId") String playerId, Model model) {
+        Board board = gameService.move(playerId, x, y);
         model.addAttribute("board", board);
         return "board";
     }

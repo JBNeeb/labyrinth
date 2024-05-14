@@ -2,12 +2,14 @@ package de.justusneeb.labyrinth.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode(of = {"playerId"})
 public class Player {
     @Id
     private String playerId;
