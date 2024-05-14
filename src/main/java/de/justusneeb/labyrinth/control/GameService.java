@@ -70,6 +70,7 @@ public class GameService {
         Board board = createStaticBoard(map);
         placeDynamicTiles(new ArrayList<>(map.values()), board);
         board.setGameId(player.getGameId());
+        board.setPlayerId(playerId);
         board.setActual(player);
 //        board.setActual(board.getPlayers().get(RANDOM.nextInt(board.getPlayers().size())));
         board.setPlayers(retrievePlayers(player.getGameId()));
