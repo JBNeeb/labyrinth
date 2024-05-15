@@ -3,10 +3,90 @@
 <!--/*@thymesVar id="player" type="de.justusneeb.labyrinth.entity.Player"*/-->
     <head>
         <title>Labyrinth</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+            }
+
+            header {
+                background-color: #333;
+                color: white;
+                padding: 10px 0;
+            }
+
+            .container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            .text {
+                text-align: center;
+                text-size: 21px;
+                margin: 2px;
+            }
+
+            h1 {
+                text-align: center;
+                text-size: 32px;
+            }
+
+            .logo a {
+                text-decoration: none;
+                color: white;
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+            }
+
+            nav ul li {
+                margin-left: 20px;
+            }
+
+            nav ul li a {
+                text-decoration: none;
+                color: white;
+                font-size: 18px;
+            }
+
+            nav ul li a:hover {
+                text-decoration: underline;
+                color: #33FFA8;
+                font-size: 21px;
+            }
+
+        </style>
     </head>
     <body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="#"><img src="/images/cover.jpg" alt="cover"/></a><br>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/create-match">Create Match</a></li>
+                    <li><a href="/join-match">Join Match</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
         <h1>Create a new match</h1>
-        <form action="#" th:action="@{/create-match}" th:object="${player}" method="POST">
+        <form action="#" th:action="@{/create-match}" th:object="${player}" method="POST" class="text">
             <label for="username">Benutzername:</label> <input id="username" th:field="${player.username}" type="text" maxlength="80">
             <div th:each="color : ${colors}">
                 <input th:id="${color}" type="radio" th:value="${color}" th:field="${player.color}" th:text="${color}"><br/>

@@ -7,7 +7,7 @@
         <title>Labyrinth</title>
     </head>
     <body>
-        <h1>Join an existing match match</h1>
+        <h1>Join an existing match</h1>
         <form action="#" th:action="@{/join-match}" th:object="${player}" method="POST">
             <label for="username">Benutzername:</label> <input id="username" th:field="${player.username}" type="text" maxlength="80">
             <input type="hidden" th:field="${player.gameId}">
