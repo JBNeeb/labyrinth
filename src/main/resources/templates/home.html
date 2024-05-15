@@ -2,10 +2,116 @@
     <head>
         <title>Home | labyrinth</title>
         <link rel="icon" type="image/jpg" href="/images/cover.jpg"/>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+            }
+
+            header {
+                background-color: #333;
+                color: white;
+                padding: 10px 0;
+            }
+
+            .container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            .logo a {
+                text-decoration: none;
+                color: white;
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            .text {
+                text-align: center;
+                text-size: 21px;
+                margin: 2px;
+                font-family: "Courier New";
+            }
+
+            .titletext {
+                text-align: center;
+                font-size: 64px;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+            }
+
+            nav ul li {
+                margin-left: 20px;
+            }
+
+            nav ul li a {
+                text-decoration: none;
+                color: white;
+                font-size: 18px;
+            }
+
+            nav ul li a:hover {
+                text-decoration: underline;
+                color: #33FFA8;
+                font-size: 21px;
+            }
+
+            .search {
+                display: flex;
+            }
+
+            .search input {
+                padding: 5px;
+                border: none;
+                border-radius: 3px;
+                margin-right: 10px;
+            }
+
+            .search button {
+                padding: 5px 10px;
+                border: none;
+                border-radius: 3px;
+                background-color: #555;
+                color: white;
+                cursor: pointer;
+            }
+
+            .search button:hover {
+                background-color: #777;
+            }
+        </style>
     </head>
     <body>
-        <img src="/images/cover.jpg" alt="cover"/><br>
-        <a href="/create-match">Create a match</a><br>
-        <a href="/join-match">Join an existing match</a><br>
+        <header>
+            <div class="container">
+                <div class="logo">
+                    <a href="#"><img src="/images/cover.jpg" alt="cover"/></a><br>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="/create-match">Create Match</a></li>
+                        <li><a href="/join-match">Join Match</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <h1 class="titletext">labyrinth</h1>
+        <p class="text">labyrinth is a multiplayer board game for 2-4 players. the players have to reach the symboles matching to their cards<br>
+            they have gotten. how many cards there are is dependent from the number of players playing. after having standed on all<br>
+            cards the player had to reach, the player has to get back to its startingpoint (one of the corners of the board).<br>
+            the winner is the player who first visited all the positions he needed and stands on his starting point again.<br></p>
     </body>
 </html>
