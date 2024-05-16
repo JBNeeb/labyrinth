@@ -78,48 +78,52 @@ CREATE TABLE tile (
     south INTEGER NOT NULL,
     west INTEGER NOT NULL,
     symbol VARCHAR(20),
+    color VARCHAR(10),
+    x INTEGER,
+    y INTEGER,
     PRIMARY KEY (tile),
-    FOREIGN KEY (symbol) REFERENCES symbol(symbol)
+    FOREIGN KEY (symbol) REFERENCES symbol(symbol),
+    FOREIGN KEY (color) REFERENCES color(color)
 );
 
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('red', '/images/tiles/red-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('black', '/images/tiles/black-80x80-final.png', 0, 0, 1, 1, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('white', '/images/tiles/white-80x80-final.png', 1, 1, 0, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('green', '/images/tiles/green-80x80-final.png', 1, 0, 0, 1, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner00', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner01', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner02', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner03', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner04', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner05', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner06', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner07', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner08', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('corner09', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight00', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight01', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight02', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight03', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight04', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight05', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight06', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight07', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight08', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight09', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight10', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('straight11', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0, null);
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('skull', '/images/tiles/skull-80x80-final.png', 0, 1, 1, 1, 'SKULL');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('sword', '/images/tiles/sword-80x80-final.png', 0, 1, 1, 1, 'SWORD');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('bag of gold', '/images/tiles/bag-of-gold-80x80-final.png', 1, 1, 1, 0, 'BAG_OF_GOLD');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('keychain', '/images/tiles/keychain-80x80-final.png', 1, 1, 1, 0, 'KEYCHAIN');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('diamond', '/images/tiles/diamond-80x80-final.png', 0, 1, 1, 1, 'DIAMOND');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('helmet', '/images/tiles/helmet-80x80-final.png', 1, 0, 1, 1, 'HELMET');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('book', '/images/tiles/book-80x80-final.png', 1, 1, 1, 0, 'BOOK');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('crown', '/images/tiles/crown-80x80-final.png', 1, 1, 0, 1, 'CROWN');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('chest', '/images/tiles/chest-80x80-final.png', 1, 0, 1, 1, 'CHEST');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('candle holder', '/images/tiles/candle-holder-80x80-final.png', 1, 0, 1, 1, 'CANDLE_HOLDER');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('map', '/images/tiles/map-80x80-final.png', 1, 1, 0, 1, 'MAP');
-INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('ring', '/images/tiles/ring-80x80-final.png', 1, 1, 0, 1, 'RING');
+INSERT INTO tile(tile, image, north, east, south, west, color, x, y) VALUES ('red', '/images/tiles/red-80x80-final.png', 0, 1, 1, 0, 'RED', 0, 0);
+INSERT INTO tile(tile, image, north, east, south, west, color, x, y) VALUES ('black', '/images/tiles/black-80x80-final.png', 0, 0, 1, 1, 'BLACK', 6, 0);
+INSERT INTO tile(tile, image, north, east, south, west, color, x, y) VALUES ('white', '/images/tiles/white-80x80-final.png', 1, 1, 0, 0, 'WHITE', 0, 6);
+INSERT INTO tile(tile, image, north, east, south, west, color, x, y) VALUES ('green', '/images/tiles/green-80x80-final.png', 1, 0, 0, 1, 'GREEN', 6, 6);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner00', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner01', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner02', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner03', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner04', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner05', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner06', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner07', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner08', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('corner09', '/images/tiles/corner-80x80-final.png', 0, 1, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight00', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight01', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight02', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight03', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight04', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight05', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight06', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight07', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight08', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight09', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight10', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west) VALUES ('straight11', '/images/tiles/straight-80x80-final.png', 1, 0, 1, 0);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('skull', '/images/tiles/skull-80x80-final.png', 0, 1, 1, 1, 'SKULL', 2, 0);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('sword', '/images/tiles/sword-80x80-final.png', 0, 1, 1, 1, 'SWORD', 4, 0);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('bag of gold', '/images/tiles/bag-of-gold-80x80-final.png', 1, 1, 1, 0, 'BAG_OF_GOLD', 0 ,2);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('keychain', '/images/tiles/keychain-80x80-final.png', 1, 1, 1, 0, 'KEYCHAIN', 2, 2);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('diamond', '/images/tiles/diamond-80x80-final.png', 0, 1, 1, 1, 'DIAMOND', 4, 2);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('helmet', '/images/tiles/helmet-80x80-final.png', 1, 0, 1, 1, 'HELMET', 6, 2);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('book', '/images/tiles/book-80x80-final.png', 1, 1, 1, 0, 'BOOK', 0, 4);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('crown', '/images/tiles/crown-80x80-final.png', 1, 1, 0, 1, 'CROWN', 2, 4);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('chest', '/images/tiles/chest-80x80-final.png', 1, 0, 1, 1, 'CHEST', 4, 4);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('candle holder', '/images/tiles/candle-holder-80x80-final.png', 1, 0, 1, 1, 'CANDLE_HOLDER', 6, 4);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('map', '/images/tiles/map-80x80-final.png', 1, 1, 0, 1, 'MAP', 2, 6);
+INSERT INTO tile(tile, image, north, east, south, west, symbol, x, y) VALUES ('ring', '/images/tiles/ring-80x80-final.png', 1, 1, 0, 1, 'RING', 4, 6);
 INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('salamander', '/images/tiles/salamander-80x80-final.png', 0, 1, 1, 0, 'SALAMANDER');
 INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('mouse', '/images/tiles/mouse-80x80-final.png', 0, 1, 1, 0, 'MOUSE');
 INSERT INTO tile(tile, image, north, east, south, west, symbol) VALUES ('owl', '/images/tiles/owl-80x80-final.png', 0, 1, 1, 0, 'OWL');
@@ -179,15 +183,14 @@ CREATE TABLE card_status (
     PRIMARY KEY (status)
 );
 
-INSERT INTO card_status (status) VALUES ('Hidden');
-INSERT INTO card_status (status) VALUES ('Open');
-INSERT INTO card_status (status) VALUES ('Solved');
+INSERT INTO card_status (status) VALUES ('HIDDEN');
+INSERT INTO card_status (status) VALUES ('OPEN');
+INSERT INTO card_status (status) VALUES ('SOLVED');
 
 CREATE TABLE player_card (
     player_id VARCHAR(40) NOT NULL,
     symbol VARCHAR(20) NOT NULL,
     status VARCHAR(20) NOT NULL,
-    sequence INTEGER NOT NULL,
     PRIMARY KEY (player_id, symbol),
     FOREIGN KEY (player_id) REFERENCES player(player_id),
     FOREIGN KEY (symbol) REFERENCES card(symbol),

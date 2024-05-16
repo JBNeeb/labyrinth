@@ -78,7 +78,10 @@
     </style>
 </head>
 <body>
-    <table>
+    <div th:if="${board.status == 'ENDED'}">
+        <span th:text="'The winned is: '+${board.actual}"></span>
+    </div>
+    <table th:if="${board.status == 'PLAYING'}">
         <tbody>
             <tr>
                 <td>
@@ -129,11 +132,9 @@
                 </td>
                 <td>
                     <div th:each="player : ${board.players}">
-                        <span th:text="${player.username + ' ' + player.color + ' ' + player.playerId}"></span>
-                    </div>
-                    <div>
-                        <span th:text="${board.actual.username + board.actual.playerId}">Active player is: </span>
-                        <span th:text="${board.phase}"></span>
+                        <span th:text="${player.username + ', ' + player.color + ', Solved: ' + player.solved}"></span>
+                        <span th:if="${player.playerId == board.actual}" th:text="${board.phase}"></span><br>
+                        <span th:if="${player.playerId == board.playerId && player.openCard != null}" th:text="${player.openCard.symbol}"></span>
                     </div>
                     <img th:src="@{${board.freeTile.image}}" th:alt="${board.freeTile.tile}" th:class="rotation+${board.freeTile.rotation}"><br/>
                     <a th:href="@{/rotate/90(playerId=${board.playerId})}">90 Grad rechts</a><br/>

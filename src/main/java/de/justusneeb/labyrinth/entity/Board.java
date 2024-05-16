@@ -11,8 +11,8 @@ public class Board {
     private String gameId;
     private PlacedTile[][] tiles;
     private PlacedTile freeTile;
-    private Player actual;
-    private List<Player> players;
+    private String actual;
+    private List<PlayerInfo> players;
     private String status;
     private String phase;
     private String playerId;

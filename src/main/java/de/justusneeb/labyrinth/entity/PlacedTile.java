@@ -14,4 +14,6 @@ public class PlacedTile {
     private boolean west;
     private String image;
     private boolean reachable;
+    private String symbol;
+    private String color;
 }

@@ -19,6 +19,10 @@ public class GameService {
 
     private final GameTileRepository gameTileRepository;
 
+    private final CardRepository cardRepository;
+
+    private final PlayerCardRepository playerCardRepository;
+
     public Game createGame() {
         Game game = new Game();
         game.setGameId(UUID.randomUUID().toString());
@@ -31,20 +35,10 @@ public class GameService {
         player.setPlayerId(UUID.randomUUID().toString());
         player.setUsername(username);
         player.setColor(color);
-        if ("BLACK".equals(player.getColor())) {
-            player.setX(6);
-            player.setY(0);
-        } else if ("RED".equals(player.getColor())) {
-            player.setX(0);
-            player.setY(0);
-        } else if ("GREEN".equals(player.getColor())) {
-            player.setX(6);
-            player.setY(6);
-        } else if ("WHITE".equals(player.getColor())) {
-            player.setX(0);
-            player.setY(6);
-        }
         player.setGameId(gameId);
+        Tile tile = tileRepository.findByColor(color).orElseThrow();
+        player.setX(tile.getX());
+        player.setY(tile.getY());
         return playerRepository.save(player);
     }
 
@@ -66,19 +60,79 @@ public class GameService {
         if (!game.getStatus().equals(GameStatus.WAITING.name())) {
             return loadBoard(playerId);
         }
-        Map<String, PlacedTile> map = retrievePlacedTiles();
-        Board board = createStaticBoard(map);
-        placeDynamicTiles(new ArrayList<>(map.values()), board);
-        board.setGameId(player.getGameId());
+        Board board = placeTiles();
+        board.setGameId(game.getGameId());
         board.setPlayerId(playerId);
-        board.setActual(player);
+        List<PlayerInfo> players = mapPlayers(game.getGameId());
+        dealCards(players);
+        for (PlayerInfo pi : players) {
+            solveCard(pi);
+        }
+        board.setPlayers(players);
+        board.setActual(playerId);
 //        board.setActual(board.getPlayers().get(RANDOM.nextInt(board.getPlayers().size())));
-        board.setPlayers(retrievePlayers(player.getGameId()));
-        board.setOwnDraw(playerId.equals(board.getActual().getPlayerId()));
+        board.setOwnDraw(board.getActual().equals(playerId));
         board.setStatus(GameStatus.PLAYING.name());
         board.setPhase(GamePhase.SHIFT.name());
         saveBoard(board);
         return board;
+    }
+
+    private List<PlayerInfo> mapPlayers(String gameId) {
+        List<PlayerInfo> players = new ArrayList<>();
+        for (Player p : retrievePlayers(gameId)) {
+            PlayerInfo pi = new PlayerInfo();
+            pi.setPlayerId(p.getPlayerId());
+            pi.setUsername(p.getUsername());
+            pi.setX(p.getX());
+            pi.setY(p.getY());
+            pi.setColor(p.getColor());
+            players.add(pi);
+        }
+        return players;
+    }
+
+    private void solveCard(PlayerInfo player) {
+        List<PlayerCard> cards = playerCardRepository.findByPlayerId(player.getPlayerId());
+        cards.stream().filter(f -> f.getStatus().equals(CardStatus.OPEN.name())).findAny()
+                .ifPresent(playerCard -> playerCard.setStatus(CardStatus.SOLVED.name()));
+        cards.stream().filter(f -> f.getStatus().equals(CardStatus.HIDDEN.name()))
+                .findFirst().ifPresent(playerCard -> playerCard.setStatus(CardStatus.OPEN.name()));
+        setCardStatus(cards, player);
+        playerCardRepository.saveAll(cards);
+    }
+
+    private void setCardStatus(List<PlayerInfo> players) {
+        for (PlayerInfo p : players) {
+            setCardStatus(playerCardRepository.findByPlayerId(p.getPlayerId()), p);
+        }
+    }
+
+    private void setCardStatus(List<PlayerCard> cards, PlayerInfo player) {
+        Optional<PlayerCard> optional = cards.stream().filter(f -> f.getStatus().equals(CardStatus.OPEN.name())).findAny();
+        if (optional.isPresent()) {
+            player.setOpenCard(cardRepository.findById(optional.get().getSymbol()).orElseThrow());
+        } else {
+            player.setOpenCard(null);
+        }
+        player.setSolved(cards.stream().filter(f -> f.getStatus().equals(CardStatus.SOLVED.name())).count());
+        player.setHidden(cards.stream().filter(f -> f.getStatus().equals(CardStatus.HIDDEN.name())).count());
+    }
+
+    private void dealCards(List<PlayerInfo> players) {
+        List<PlayerCard> pcs = new ArrayList<>();
+        List<String> cards = new ArrayList<>(Arrays.stream(Symbol.values()).map(Enum::name).toList());
+        while (!cards.isEmpty()) {
+            for (PlayerInfo p : players) {
+                String card = cards.remove(RANDOM.nextInt(cards.size()));
+                PlayerCard pc = new PlayerCard();
+                pc.setSymbol(card);
+                pc.setStatus(CardStatus.HIDDEN.name());
+                pc.setPlayerId(p.getPlayerId());
+                pcs.add(pc);
+            }
+        }
+        playerCardRepository.saveAll(pcs);
     }
 
     private void saveBoard(Board board) {
@@ -108,15 +162,27 @@ public class GameService {
         Game game = new Game();
         game.setGameId(board.getGameId());
         game.setStatus(board.getStatus());
-        game.setActivePlayer(board.getActual().getPlayerId());
+        game.setActivePlayer(board.getActual());
         game.setPhase(board.getPhase());
         gameRepository.save(game);
-        playerRepository.saveAll(board.getPlayers());
+        List<Player> players = new ArrayList<>();
+        for (PlayerInfo pi : board.getPlayers()) {
+            Player p = new Player();
+            p.setPlayerId(pi.getPlayerId());
+            p.setGameId(board.getGameId());
+            p.setUsername(pi.getUsername());
+            p.setX(pi.getX());
+            p.setY(pi.getY());
+            p.setColor(pi.getColor());
+            players.add(p);
+        }
+        playerRepository.saveAll(players);
     }
 
     private void markReachable(Board board) {
         if (board.isOwnDraw() && GamePhase.valueOf(board.getPhase()) == GamePhase.MOVE) {
-            markReachable(board.getActual().getX(), board.getActual().getY(), board.getTiles());
+            PlayerInfo pi = board.getPlayers().stream().filter(f -> f.getPlayerId().equals(board.getActual())).findAny().orElseThrow();
+            markReachable(pi.getX(), pi.getY(), board.getTiles());
         }
     }
 
@@ -126,18 +192,6 @@ public class GameService {
                 t1.setReachable(false);
             }
         }
-    }
-
-    private void placeDynamicTiles(List<PlacedTile> list, Board board) {
-        for (int i = 0; i < board.getTiles().length; i++) {
-            for (int j = 0; j < board.getTiles()[i].length; j++) {
-                if (board.getTiles()[i][j] == null) {
-                    board.getTiles()[i][j] = list.remove(RANDOM.nextInt(list.size()));
-                    rotate(board.getTiles()[i][j], RANDOM.nextInt(4) * 90);
-                }
-            }
-        }
-        board.setFreeTile(list.remove(0));
     }
 
     private void rotate(PlacedTile placedTile, int rotation) {
@@ -152,43 +206,53 @@ public class GameService {
         }
     }
 
-    private Board createStaticBoard(Map<String, PlacedTile> map) {
-        Board board = new Board();
-        board.setTiles(new PlacedTile[7][7]);
-        board.getTiles()[0][0] = map.remove("red");
-        board.getTiles()[0][2] = map.remove("skull");
-        board.getTiles()[0][4] = map.remove("sword");
-        board.getTiles()[0][6] = map.remove("black");
-        board.getTiles()[2][0] = map.remove("bag of gold");
-        board.getTiles()[2][2] = map.remove("keychain");
-        board.getTiles()[2][4] = map.remove("diamond");
-        board.getTiles()[2][6] = map.remove("helmet");
-        board.getTiles()[4][0] = map.remove("book");
-        board.getTiles()[4][2] = map.remove("crown");
-        board.getTiles()[4][4] = map.remove("chest");
-        board.getTiles()[4][6] = map.remove("candle holder");
-        board.getTiles()[6][0] = map.remove("white");
-        board.getTiles()[6][2] = map.remove("map");
-        board.getTiles()[6][4] = map.remove("ring");
-        board.getTiles()[6][6] = map.remove("green");
-        return board;
-    }
-
     private Map<String, PlacedTile> retrievePlacedTiles() {
         Map<String, PlacedTile> map = new HashMap<>();
         List<Tile> tiles = tileRepository.findAll();
         for (Tile t : tiles) {
-            PlacedTile pt = new PlacedTile();
-            pt.setTile(t.getTile());
-            pt.setImage(t.getImage());
-            pt.setRotation(0);
-            pt.setNorth(t.getNorth() == 1);
-            pt.setEast((t.getEast() == 1));
-            pt.setSouth(t.getSouth() == 1);
-            pt.setWest(t.getWest() == 1);
-            map.put(t.getTile(), pt);
+            PlacedTile pt = map(t);
+            map.put(pt.getTile(), pt);
         }
         return map;
+    }
+
+    private Board placeTiles() {
+        Board board = new Board();
+        board.setTiles(new PlacedTile[7][7]);
+        List<Tile> tiles = tileRepository.findAll();
+        List<PlacedTile> freeTiles = new ArrayList<>();
+        for (Tile t : tiles) {
+            PlacedTile pt = map(t);
+            if (t.getX() != null && t.getY() != null) {
+                board.getTiles()[t.getY()][t.getX()] = pt;
+            } else {
+                freeTiles.add(pt);
+            }
+        }
+        for (int i = 0; i < board.getTiles().length; i++) {
+            for (int j = 0; j < board.getTiles()[i].length; j++) {
+                if (board.getTiles()[i][j] == null) {
+                    board.getTiles()[i][j] = freeTiles.remove(RANDOM.nextInt(freeTiles.size()));
+                    rotate(board.getTiles()[i][j], RANDOM.nextInt(4) * 90);
+                }
+            }
+        }
+        board.setFreeTile(freeTiles.remove(0));
+        return board;
+    }
+
+    private PlacedTile map(Tile t) {
+        PlacedTile pt = new PlacedTile();
+        pt.setTile(t.getTile());
+        pt.setImage(t.getImage());
+        pt.setRotation(0);
+        pt.setNorth(t.getNorth() == 1);
+        pt.setEast((t.getEast() == 1));
+        pt.setSouth(t.getSouth() == 1);
+        pt.setWest(t.getWest() == 1);
+        pt.setSymbol(t.getSymbol());
+        pt.setColor(t.getColor());
+        return pt;
     }
 
     public Board rotateFreePlate(String playerId, int rotation) {
@@ -207,11 +271,11 @@ public class GameService {
         Board board = new Board();
         board.setPlayerId(playerId);
         board.setGameId(game.getGameId());
-        board.setPlayers(retrievePlayers(game.getGameId()));
-        board.setActual(board.getPlayers().stream().filter(f -> f.getPlayerId().equals(game.getActivePlayer())).findAny().orElseThrow());
+        board.setPlayers(mapPlayers(game.getGameId()));
+        board.setActual(game.getActivePlayer());
         board.setStatus(game.getStatus());
         board.setPhase(game.getPhase());
-        board.setOwnDraw(playerId.equals(board.getActual().getPlayerId()));
+        board.setOwnDraw(board.getActual().equals(playerId));
         board.setTiles(new PlacedTile[7][7]);
         for (GameTile gt : gameTiles) {
             PlacedTile pt = map.get(gt.getTile());
@@ -222,6 +286,7 @@ public class GameService {
                 board.setFreeTile(pt);
             }
         }
+        setCardStatus(board.getPlayers());
         markReachable(board);
         return board;
     }
@@ -252,57 +317,73 @@ public class GameService {
             return board;
         }
         if ("down".equals(direction)) {
-            PlacedTile temp = board.getTiles()[board.getTiles().length - 1][line];
-            for (int i = board.getTiles().length - 1; i > 0; i--) {
-                board.getTiles()[i][line] = board.getTiles()[i - 1][line];
-            }
-            board.getTiles()[0][line] = board.getFreeTile();
-            board.setFreeTile(temp);
-            for (Player pLayer : board.getPlayers()) {
-                if (pLayer.getX() == line) {
-                    pLayer.setY((pLayer.getY() + 1) % board.getTiles().length);
-                }
-            }
+            shiftDown(line, board);
         } else if ("up".equals(direction)) {
-            PlacedTile temp = board.getTiles()[0][line];
-            for (int i = 0; i < board.getTiles().length - 1; i++) {
-                board.getTiles()[i][line] = board.getTiles()[i + 1][line];
-            }
-            board.getTiles()[board.getTiles().length - 1][line] = board.getFreeTile();
-            board.setFreeTile(temp);
-            for (Player pLayer : board.getPlayers()) {
-                if (pLayer.getX() == line) {
-                    pLayer.setY((pLayer.getY() + board.getTiles().length - 1) % board.getTiles().length);
-                }
-            }
+            shiftUp(line, board);
         } else if ("right".equals(direction)) {
-            PlacedTile temp = board.getTiles()[line][board.getTiles().length - 1];
-            for (int i = board.getTiles().length - 1; i > 0; i--) {
-                board.getTiles()[line][i] = board.getTiles()[line][i - 1];
-            }
-            board.getTiles()[line][0] = board.getFreeTile();
-            board.setFreeTile(temp);
-            for (Player pLayer : board.getPlayers()) {
-                if (pLayer.getY() == line) {
-                    pLayer.setX((pLayer.getX() + 1) % board.getTiles().length);
-                }
-            }
+            shiftRight(line, board);
         } else if ("left".equals(direction)) {
-            PlacedTile temp = board.getTiles()[line][0];
-            for (int i = 0; i < board.getTiles().length - 1; i++) {
-                board.getTiles()[line][i] = board.getTiles()[line][i + 1];
-            }
-            board.getTiles()[line][board.getTiles().length - 1] = board.getFreeTile();
-            board.setFreeTile(temp);
-            for (Player pLayer : board.getPlayers()) {
-                if (pLayer.getY() == line) {
-                    pLayer.setX((pLayer.getX() + board.getTiles().length - 1) % board.getTiles().length);
-                }
-            }
+            shiftLeft(line, board);
         }
         board.setPhase(GamePhase.MOVE.name());
         saveBoard(board);
         return board;
+    }
+
+    private void shiftLeft(Integer line, Board board) {
+        PlacedTile temp = board.getTiles()[line][0];
+        for (int i = 0; i < board.getTiles().length - 1; i++) {
+            board.getTiles()[line][i] = board.getTiles()[line][i + 1];
+        }
+        board.getTiles()[line][board.getTiles().length - 1] = board.getFreeTile();
+        board.setFreeTile(temp);
+        for (PlayerInfo pLayer : board.getPlayers()) {
+            if (pLayer.getY() == line) {
+                pLayer.setX((pLayer.getX() + board.getTiles().length - 1) % board.getTiles().length);
+            }
+        }
+    }
+
+    private void shiftRight(Integer line, Board board) {
+        PlacedTile temp = board.getTiles()[line][board.getTiles().length - 1];
+        for (int i = board.getTiles().length - 1; i > 0; i--) {
+            board.getTiles()[line][i] = board.getTiles()[line][i - 1];
+        }
+        board.getTiles()[line][0] = board.getFreeTile();
+        board.setFreeTile(temp);
+        for (PlayerInfo pLayer : board.getPlayers()) {
+            if (pLayer.getY() == line) {
+                pLayer.setX((pLayer.getX() + 1) % board.getTiles().length);
+            }
+        }
+    }
+
+    private void shiftUp(Integer line, Board board) {
+        PlacedTile temp = board.getTiles()[0][line];
+        for (int i = 0; i < board.getTiles().length - 1; i++) {
+            board.getTiles()[i][line] = board.getTiles()[i + 1][line];
+        }
+        board.getTiles()[board.getTiles().length - 1][line] = board.getFreeTile();
+        board.setFreeTile(temp);
+        for (PlayerInfo pLayer : board.getPlayers()) {
+            if (pLayer.getX() == line) {
+                pLayer.setY((pLayer.getY() + board.getTiles().length - 1) % board.getTiles().length);
+            }
+        }
+    }
+
+    private void shiftDown(Integer line, Board board) {
+        PlacedTile temp = board.getTiles()[board.getTiles().length - 1][line];
+        for (int i = board.getTiles().length - 1; i > 0; i--) {
+            board.getTiles()[i][line] = board.getTiles()[i - 1][line];
+        }
+        board.getTiles()[0][line] = board.getFreeTile();
+        board.setFreeTile(temp);
+        for (PlayerInfo pLayer : board.getPlayers()) {
+            if (pLayer.getX() == line) {
+                pLayer.setY((pLayer.getY() + 1) % board.getTiles().length);
+            }
+        }
     }
 
     public Board move(String playerId, int x, int y) {
@@ -310,13 +391,22 @@ public class GameService {
         if (!board.isOwnDraw() || GamePhase.valueOf(board.getPhase()) != GamePhase.MOVE || !board.getTiles()[y][x].isReachable()) {
             return board;
         }
-        board.getActual().setX(x);
-        board.getActual().setY(y);
-        int index = board.getPlayers().indexOf(board.getActual());
-        index = (index + 1) % board.getPlayers().size();
-        board.setActual(board.getPlayers().get(index));
-        board.setPhase(GamePhase.SHIFT.name());
-        board.setOwnDraw(false);
+        PlayerInfo pi = board.getPlayers().stream().filter(f -> f.getPlayerId().equals(playerId)).findAny().orElseThrow();
+        pi.setX(x);
+        pi.setY(y);
+        PlacedTile tile = board.getTiles()[y][x];
+        if (pi.getOpenCard() != null && pi.getOpenCard().getSymbol().equals(tile.getSymbol())) {
+            solveCard(pi);
+        }
+        if (pi.getHidden() == 0 && pi.getColor().equals(tile.getColor())) {
+            board.setStatus(GameStatus.ENDED.name());
+        } else {
+            int index = board.getPlayers().indexOf(pi);
+            index = (index + 1) % board.getPlayers().size();
+            board.setActual(board.getPlayers().get(index).getPlayerId());
+            board.setPhase(GamePhase.SHIFT.name());
+            board.setOwnDraw(false);
+        }
         saveBoard(board);
         return board;
     }

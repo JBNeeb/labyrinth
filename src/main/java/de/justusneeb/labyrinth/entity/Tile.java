@@ -17,4 +17,7 @@ public class Tile {
     private int south;
     private int west;
     private String symbol;
+    private String color;
+    private Integer x;
+    private Integer y;
 }

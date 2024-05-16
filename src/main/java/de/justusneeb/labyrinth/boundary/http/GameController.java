@@ -104,7 +104,7 @@ public class GameController {
     }
 
     @GetMapping("/board")
-    private String board(@RequestParam("playerId") String playerId, Model model) {
+    public String board(@RequestParam("playerId") String playerId, Model model) {
         Board board = gameService.loadBoard(playerId);
         model.addAttribute("board", board);
         return "board";
