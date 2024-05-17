@@ -1,3 +1,14 @@
+DROP TABLE player_card;
+DROP TABLE card_status;
+DROP TABLE player;
+DROP TABLE game_tile;
+DROP TABLE game;
+DROP TABLE game_status;
+DROP TABLE tile;
+DROP TABLE card;
+DROP TABLE symbol;
+DROP TABLE color;
+
 CREATE TABLE color (
 	color VARCHAR(10) NOT NULL,
 	PRIMARY KEY (color)
