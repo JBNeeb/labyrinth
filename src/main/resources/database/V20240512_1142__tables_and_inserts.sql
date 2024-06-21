@@ -56,30 +56,30 @@ CREATE TABLE card (
     FOREIGN KEY (symbol) REFERENCES symbol(symbol)
 );
 
-INSERT INTO card (symbol, image) VALUES ('HELMET', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('GHOST', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('HOBBIT', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('DIAMOND', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('CANDLE_HOLDER', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('OWL', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('CHEST', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('BAT', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('DRAGON', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('RING', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('SWORD', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('SKULL', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('SCARAB', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('GENIE', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('CROWN', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('KEYCHAIN', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('FAIRY', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('BAG_OF_GOLD', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('SALAMANDER', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('BOOK', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('MAP', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('SPIDER', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('SKULL_MOTH', '/images/tiles/red-80x80-final.png');
-INSERT INTO card (symbol, image) VALUES ('MOUSE', '/images/tiles/red-80x80-final.png');
+INSERT INTO card (symbol, image) VALUES ('HELMET', '/images/cards/helmet-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('GHOST', '/images/cards/ghost-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('HOBBIT', '/images/cards/hobbit-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('DIAMOND', '/images/cards/diamond-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('CANDLE_HOLDER', '/images/cards/candle-holder-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('OWL', '/images/cards/owl-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('CHEST', '/images/cards/chest-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('BAT', '/images/cards/bat-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('DRAGON', '/images/cards/dragon-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('RING', '/images/cards/ring-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('SWORD', '/images/cards/sword-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('SKULL', '/images/cards/skull-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('SCARAB', '/images/cards/scarab-card-final-100x157l.png');
+INSERT INTO card (symbol, image) VALUES ('GENIE', '/images/cards/genie-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('CROWN', '/images/cards/crown-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('KEYCHAIN', '/images/cards/keychain-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('FAIRY', '/images/cards/fairy-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('BAG_OF_GOLD', '/images/cards/bag-of-gold-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('SALAMANDER', '/images/cards/salamander-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('BOOK', '/images/cards/book-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('MAP', '/images/cards/map-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('SPIDER', '/images/cards/spider-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('SKULL_MOTH', '/images/cards/skull-moth-card-final-100x157.png');
+INSERT INTO card (symbol, image) VALUES ('MOUSE', '/images/cards/mouse-card-final-100x157.png');
 
 CREATE TABLE tile (
     tile VARCHAR(40) NOT NULL,
