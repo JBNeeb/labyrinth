@@ -17,4 +17,6 @@ public class Board {
     private String phase;
     private String playerId;
     private boolean ownDraw;
+    private String lastDirection;
+    private Integer lastLine;
 }

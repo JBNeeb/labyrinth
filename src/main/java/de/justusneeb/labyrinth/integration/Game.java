@@ -14,4 +14,6 @@ public class Game {
     private String status;
     private String activePlayer;
     private String phase;
+    private String lastDirection;
+    private Integer lastLine;
 }
