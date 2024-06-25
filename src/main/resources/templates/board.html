@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="EN">
-<!--/*@thymesVar id="board" type="de.justusneeb.labyrinth.entity.Board"*/-->
+<!--/*@thymesVar id="board" type="de.justusneeb.labyrinth.model.Board"*/-->
 <head>
     <title>labyrinth</title>
     <style>
@@ -90,9 +90,9 @@
                             <img src="/images/tiles/transparent-80x80-final.png" alt="empty">
                         </span>
                         <span th:each="col, pos : ${board.tiles}">
-                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT'}" th:href="@{'/shift/down/'+${pos.index}(playerId=${board.playerId})}"
+                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT' && (pos.index != board.lastLine || board.lastDirection != 'UP')}" th:href="@{'/shift/down/'+${pos.index}(playerId=${board.playerId})}"
                                 ><img src="/images/tiles/transparent-80x80-final.png" alt="arrow down"></a>
-                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT'}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT' || (pos.index == board.lastLine && board.lastDirection == 'UP')}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
                         </span>
                         <span>
                             <img src="/images/tiles/transparent-80x80-final.png" alt="empty">
@@ -100,9 +100,9 @@
                     </div>
                     <div th:each="row, pos : ${board.tiles}">
                         <span>
-                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT'}" th:href="@{'/shift/right/'+${pos.index}(playerId=${board.playerId})}"
+                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT' && (pos.index != board.lastLine || board.lastDirection != 'LEFT')}" th:href="@{'/shift/right/'+${pos.index}(playerId=${board.playerId})}"
                                 ><img src="/images/tiles/transparent-80x80-final.png" alt="arrow right"></a>
-                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT'}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT' || (pos.index == board.lastLine && board.lastDirection == 'LEFT')}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
                         </span>
                         <span th:each="cell, pos2 : ${row}" class="container">
                             <a th:href="@{'/move/x/'+${pos2.index}+'/y/'+${pos.index}(playerId=${board.playerId})}" th:if="${cell.reachable}"
@@ -111,9 +111,9 @@
                             <span th:each="player: ${board.players}" th:if="${pos.index == player.y && pos2.index == player.x}" th:text="${player.username.substring(0, 1)}" th:class="${player.color.toLowerCase()}"></span>
                         </span>
                         <span>
-                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT'}" th:href="@{'/shift/left/'+${pos.index}(playerId=${board.playerId})}"
+                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT' && (pos.index != board.lastLine || board.lastDirection != 'RIGHT')}" th:href="@{'/shift/left/'+${pos.index}(playerId=${board.playerId})}"
                                 ><img src="/images/tiles/transparent-80x80-final.png" alt="arrow left"></a>
-                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT'}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT' || (pos.index == board.lastLine && board.lastDirection == 'RIGHT')}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
                         </span>
                     </div>
                     <div>
@@ -121,9 +121,9 @@
                             <img src="/images/tiles/transparent-80x80-final.png" alt="empty">
                         </span>
                         <span th:each="col, pos : ${board.tiles}">
-                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT'}" th:href="@{'/shift/up/'+${pos.index}(playerId=${board.playerId})}"
+                            <a th:if="${pos.index % 2 == 1 && board.ownDraw && board.phase == 'SHIFT' && (pos.index != board.lastLine || board.lastDirection != 'DOWN')}" th:href="@{'/shift/up/'+${pos.index}(playerId=${board.playerId})}"
                                 ><img src="/images/tiles/transparent-80x80-final.png" alt="arrow up"></a>
-                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT'}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
+                            <img th:if="${pos.index % 2 == 0 || !board.ownDraw || board.phase != 'SHIFT' || (pos.index == board.lastLine && board.lastDirection == 'DOWN')}" src="/images/tiles/transparent-80x80-final.png" alt="empty">
                         </span>
                         <span>
                             <img src="/images/tiles/transparent-80x80-final.png" alt="empty">

@@ -1,4 +1,4 @@
-package de.justusneeb.labyrinth.entity;
+package de.justusneeb.labyrinth.integration;
 
 import org.springframework.data.repository.ListCrudRepository;
 

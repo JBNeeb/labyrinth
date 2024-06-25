@@ -162,6 +162,8 @@ CREATE TABLE game (
     status VARCHAR(20) NOT NULL,
     active_player VARCHAR(40),
     phase VARCHAR(20),
+    last_direction VARCHAR(10),
+    last_line INTEGER,
     PRIMARY KEY (game_id),
     FOREIGN KEY (status) REFERENCES game_status(status)
 );

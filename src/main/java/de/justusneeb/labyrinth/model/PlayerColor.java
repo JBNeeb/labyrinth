@@ -1,4 +1,4 @@
-package de.justusneeb.labyrinth.entity;
+package de.justusneeb.labyrinth.model;
 
 public enum PlayerColor {
     BLACK, RED, WHITE, GREEN

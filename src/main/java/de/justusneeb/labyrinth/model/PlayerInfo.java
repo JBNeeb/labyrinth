@@ -1,5 +1,6 @@
-package de.justusneeb.labyrinth.entity;
+package de.justusneeb.labyrinth.model;
 
+import de.justusneeb.labyrinth.integration.Card;
 import lombok.Getter;
 import lombok.Setter;
 

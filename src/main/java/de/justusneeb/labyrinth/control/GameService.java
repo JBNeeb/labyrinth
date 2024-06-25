@@ -1,6 +1,7 @@
 package de.justusneeb.labyrinth.control;
 
-import de.justusneeb.labyrinth.entity.*;
+import de.justusneeb.labyrinth.integration.*;
+import de.justusneeb.labyrinth.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -164,6 +165,8 @@ public class GameService {
         game.setStatus(board.getStatus());
         game.setActivePlayer(board.getActual());
         game.setPhase(board.getPhase());
+        game.setLastDirection(board.getLastDirection());
+        game.setLastLine(board.getLastLine());
         gameRepository.save(game);
         List<Player> players = new ArrayList<>();
         for (PlayerInfo pi : board.getPlayers()) {
@@ -275,6 +278,8 @@ public class GameService {
         board.setActual(game.getActivePlayer());
         board.setStatus(game.getStatus());
         board.setPhase(game.getPhase());
+        board.setLastDirection(game.getLastDirection());
+        board.setLastLine(game.getLastLine());
         board.setOwnDraw(board.getActual().equals(playerId));
         board.setTiles(new PlacedTile[7][7]);
         for (GameTile gt : gameTiles) {
@@ -337,6 +342,8 @@ public class GameService {
         }
         board.getTiles()[line][board.getTiles().length - 1] = board.getFreeTile();
         board.setFreeTile(temp);
+        board.setLastDirection("LEFT");
+        board.setLastLine(line);
         for (PlayerInfo pLayer : board.getPlayers()) {
             if (pLayer.getY() == line) {
                 pLayer.setX((pLayer.getX() + board.getTiles().length - 1) % board.getTiles().length);
@@ -351,6 +358,8 @@ public class GameService {
         }
         board.getTiles()[line][0] = board.getFreeTile();
         board.setFreeTile(temp);
+        board.setLastDirection("RIGHT");
+        board.setLastLine(line);
         for (PlayerInfo pLayer : board.getPlayers()) {
             if (pLayer.getY() == line) {
                 pLayer.setX((pLayer.getX() + 1) % board.getTiles().length);
@@ -365,6 +374,8 @@ public class GameService {
         }
         board.getTiles()[board.getTiles().length - 1][line] = board.getFreeTile();
         board.setFreeTile(temp);
+        board.setLastDirection("UP");
+        board.setLastLine(line);
         for (PlayerInfo pLayer : board.getPlayers()) {
             if (pLayer.getX() == line) {
                 pLayer.setY((pLayer.getY() + board.getTiles().length - 1) % board.getTiles().length);
@@ -379,6 +390,8 @@ public class GameService {
         }
         board.getTiles()[0][line] = board.getFreeTile();
         board.setFreeTile(temp);
+        board.setLastDirection("DOWN");
+        board.setLastLine(line);
         for (PlayerInfo pLayer : board.getPlayers()) {
             if (pLayer.getX() == line) {
                 pLayer.setY((pLayer.getY() + 1) % board.getTiles().length);

@@ -1,4 +1,4 @@
-package de.justusneeb.labyrinth.entity;
+package de.justusneeb.labyrinth.model;
 
 import lombok.Getter;
 import lombok.Setter;

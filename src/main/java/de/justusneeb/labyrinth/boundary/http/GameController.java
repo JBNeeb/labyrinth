@@ -1,7 +1,10 @@
 package de.justusneeb.labyrinth.boundary.http;
 
 import de.justusneeb.labyrinth.control.GameService;
-import de.justusneeb.labyrinth.entity.*;
+import de.justusneeb.labyrinth.integration.Game;
+import de.justusneeb.labyrinth.integration.Player;
+import de.justusneeb.labyrinth.model.Board;
+import de.justusneeb.labyrinth.model.PlayerColor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,6 +1,6 @@
 package de.justusneeb.labyrinth.boundary.http;
 
-import de.justusneeb.labyrinth.entity.Player;
+import de.justusneeb.labyrinth.integration.Player;
 
 import java.util.Arrays;
 
